@@ -154,3 +154,15 @@ it just requires writing your own =bpf_prog_load()= (or
 The *assignment* is to check in [[file:xdp_loader.c][xdp_loader]] if there already is a pinned
 version of the map "xdp_stats_map" and use libbpf =bpf_map__reuse_fd()= API
 to reuse it, instead of creating a new map.
+
+
+```
+# shell 1
+sudo ./xdp_loader --dev veth-basic04 --force --progsec xdp_pass --reuse-maps
+# shell 2
+t ping --name veth-basic04
+# shell 3
+sudo ./xdp_stats --dev veth-basic04
+```
+result figure
+![](./result.png)
