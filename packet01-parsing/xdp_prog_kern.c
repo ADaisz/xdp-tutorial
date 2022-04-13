@@ -46,11 +46,21 @@ static __always_inline int parse_ethhdr(struct hdr_cursor *nh,
 }
 
 /* Assignment 2: Implement and use this */
-/*static __always_inline int parse_ip6hdr(struct hdr_cursor *nh,
+static __always_inline int parse_ip6hdr(struct hdr_cursor *nh,
 					void *data_end,
 					struct ipv6hdr **ip6hdr)
 {
-}*/
+	struct ipv6hdr *ip6h = nh->pos;
+	/* Pointer-arithmetic bounds check; pointer +1 points to after end of
+	 * thing being pointed to. We will be using this style in the remainder
+	 * of the tutorial.
+	 */
+	if (ip6h + 1 > data_end)
+		return -1;
+	nh->pos = ip6h + 1;
+	*ip6hdr = ip6h;
+	return ip6h->nexthdr;
+}
 
 /* Assignment 3: Implement and use this */
 /*static __always_inline int parse_icmp6hdr(struct hdr_cursor *nh,
