@@ -158,11 +158,11 @@ to reuse it, instead of creating a new map.
 
 #+begin_src C
  # shell 1
- shell1# sudo ./xdp_loader --dev veth-basic04 --force --progsec xdp_pass --reuse-maps  
+ sudo ./xdp_loader --dev veth-basic04 --force --progsec xdp_pass --reuse-maps  
  # shell 2  
- shell2# t ping --name veth-basic04  
+ t ping --name veth-basic04  
  # shell 3  
- shell3# sudo ./xdp_stats --dev veth-basic04 
+ sudo ./xdp_stats --dev veth-basic04 
 #+end_src
 
 [[file:result.png][result.png]]
