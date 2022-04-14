@@ -129,7 +129,7 @@ static __always_inline int parse_iphdr(struct hdr_cursor *nh, void * data_end,st
 		return  -1;
 	if(nh->pos + hdrsize > data_end)
 		return -1;
-	nh->pos += hdrszie;
+	nh->pos += hdrsize;
 	*iphdr = iph;
 	return iph->protocol;
 }
