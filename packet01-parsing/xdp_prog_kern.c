@@ -94,12 +94,14 @@ int  xdp_parser_func(struct xdp_md *ctx)
 	 * header type in the packet correct?), and bounds checking.
 	 */
 	nh_type = parse_ethhdr(&nh, data_end, &eth);
-	if (nh_type != bpf_htons(ETH_P_IPV6))
-		goto out;
-
-	/* Assignment additions go below here */
-
-	action = XDP_DROP;
+	if (nh_type == bpf_htons(ETH_P_IPV6)){
+		struct ipv6hdr *ip6h;
+		nh_type = parse_ip6hdr(&nh,data_end,&ip6h);
+		if(nh_type != IPPROTO_ICMPV6)
+			goto out;
+		/* Assignment additions go below here */
+		action = XDP_DROP;
+	}
 out:
 	return xdp_stats_record_action(ctx, action); /* read via xdp_stats */
 }
