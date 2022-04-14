@@ -138,7 +138,7 @@ int  xdp_parser_func(struct xdp_md *ctx)
 	 * parsing fails. Each helper function does sanity checking (is the
 	 * header type in the packet correct?), and bounds checking.
 	 */
-	nh_type = parse_ethhdr(&nh, data_end, &eth,&vlans);
+	nh_type = parse_ethhdr(&nh, data_end, &eth,vlans);
 	if (nh_type == bpf_htons(ETH_P_IPV6)){
 		struct ipv6hdr *ip6h;
 		struct icmp6hdr *icmp6h;
