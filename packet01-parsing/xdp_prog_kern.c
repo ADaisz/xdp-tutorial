@@ -113,6 +113,24 @@ static __always_inline int parse_icmp6hdr(struct hdr_cursor *nh,
 	return icmp6h->icmp6_type;
 }
 
+/* Assignment 5: Implement ipv4 and use this */
+struct __always_inline int parse_iphdr(struct hdr_cursor *nh, void * data_end,struct iphdr ** iphdr)
+{
+	struct iphdr * iph = nh->pos;
+	int hdrsize;
+	if(iph + 1 > data_end)
+		return -1;
+	/* 首部长度 */
+	hdrsize = iph->ihl * 4;
+	if(hdrsize < sizeof(*iph))
+		return  -1;
+	if(nh->pos + hdrsize > data_end)
+		return -1;
+	nh->pos += hdrszie;
+	*iphdr = iph;
+	return iph->protocol;
+}
+
 SEC("xdp_packet_parser")
 int  xdp_parser_func(struct xdp_md *ctx)
 {
