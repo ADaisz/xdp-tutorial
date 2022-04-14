@@ -131,6 +131,16 @@ struct __always_inline int parse_iphdr(struct hdr_cursor *nh, void * data_end,st
 	return iph->protocol;
 }
 
+struct __always_inline parse_icmphdr(struct hdr_cursor *nh,void * data_end,struct icmphdr **icmphdr)
+{
+	struct icmphdr *icmph = nh->pos;
+	if(icmph + 1 > data_end)
+		return -1;
+	nh->pos = icmph + 1;
+	*icmphdr = icmph;
+	return icmph->type;
+}
+
 SEC("xdp_packet_parser")
 int  xdp_parser_func(struct xdp_md *ctx)
 {
@@ -170,6 +180,20 @@ int  xdp_parser_func(struct xdp_md *ctx)
 		if(bpf_ntohs(icmp6h->icmp6_sequence) %2 == 0)
 			action = XDP_DROP;
 		/* Assignment additions go below here */
+	}else if(nh_type == bpf_ntohs(ETH_P_IP)){
+		struct iphdr *iph;
+		struct icmphdr *icmph;
+
+		nh_type = parse_iphdr(&nh, data_end, &iph);
+		if (nh_type != IPPROTO_ICMP)
+			goto out;
+
+		nh_type = parse_icmphdr(&nh, data_end, &icmph);
+		if (nh_type != ICMP_ECHO)
+			goto out;
+
+		if (bpf_ntohs(icmph->un.echo.sequence) % 2 == 0)
+			action = XDP_DROP;
 	}
 out:
 	return xdp_stats_record_action(ctx, action); /* read via xdp_stats */
