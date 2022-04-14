@@ -32,6 +32,15 @@ struct vlan_hdr{
 	__be16 h_vlan_TCI;
 	__be16 h_vlan_encapsulated_proto;	 
 };
+/*
+ * Struct icmphdr_common represents the common part of the icmphdr and icmp6hdr
+ * structures.
+ */
+struct icmphdr_common {
+	__u8		type;
+	__u8		code;
+	__sum16	cksum;
+};
 /* Packet parsing helpers.
  *
  * Each helper parses a packet header, including doing bounds checking, and
