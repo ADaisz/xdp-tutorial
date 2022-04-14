@@ -119,7 +119,7 @@ int  xdp_parser_func(struct xdp_md *ctx)
 	void *data_end = (void *)(long)ctx->data_end;
 	void *data = (void *)(long)ctx->data;
 	struct ethhdr *eth;
-	struct collect_vlans *vlans;
+	struct collect_vlans *vlans = NULL;
 
 	/* Default action XDP_PASS, imply everything we couldn't parse, or that
 	 * we don't want to deal with, we just pass up the stack and let the
@@ -138,7 +138,7 @@ int  xdp_parser_func(struct xdp_md *ctx)
 	 * parsing fails. Each helper function does sanity checking (is the
 	 * header type in the packet correct?), and bounds checking.
 	 */
-	nh_type = parse_ethhdr(&nh, data_end, &eth,vlans);
+	nh_type = parse_ethhdr(&nh, data_end, &eth,&vlans);
 	if (nh_type == bpf_htons(ETH_P_IPV6)){
 		struct ipv6hdr *ip6h;
 		struct icmp6hdr *icmp6h;
