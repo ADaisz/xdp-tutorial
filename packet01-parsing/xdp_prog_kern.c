@@ -62,6 +62,7 @@ static __always_inline int parse_ethhdr(struct hdr_cursor *nh,
 
 	nh->pos += hdrsize;
 	*ethhdr = eth;
+	vlh = nh->pos;
 	h_proto = eth->h_proto;
 
 	int i;
