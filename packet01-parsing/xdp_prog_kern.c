@@ -134,7 +134,7 @@ static __always_inline int parse_iphdr(struct hdr_cursor *nh, void * data_end,st
 	return iph->protocol;
 }
 
-static __always_inline parse_icmphdr(struct hdr_cursor *nh,void * data_end,struct icmphdr **icmphdr)
+static __always_inline int parse_icmphdr(struct hdr_cursor *nh,void * data_end,struct icmphdr **icmphdr)
 {
 	struct icmphdr *icmph = nh->pos;
 	if(icmph + 1 > data_end)
