@@ -32,15 +32,7 @@ struct vlan_hdr{
 	__be16 h_vlan_TCI;
 	__be16 h_vlan_encapsulated_proto;	 
 };
-/*
- * Struct icmphdr_common represents the common part of the icmphdr and icmp6hdr
- * structures.
- */
-struct icmphdr_common {
-	__u8		type;
-	__u8		code;
-	__sum16	cksum;
-};
+
 /* Packet parsing helpers.
  *
  * Each helper parses a packet header, including doing bounds checking, and
@@ -125,7 +117,7 @@ static __always_inline int parse_icmp6hdr(struct hdr_cursor *nh,
 }
 
 /* Assignment 5: Implement ipv4 and use this */
-struct __always_inline int parse_iphdr(struct hdr_cursor *nh, void * data_end,struct iphdr **iphdr)
+static __always_inline int parse_iphdr(struct hdr_cursor *nh, void * data_end,struct iphdr **iphdr)
 {
 	struct iphdr * iph = nh->pos;
 	int hdrsize;
@@ -142,7 +134,7 @@ struct __always_inline int parse_iphdr(struct hdr_cursor *nh, void * data_end,st
 	return iph->protocol;
 }
 
-struct __always_inline parse_icmphdr(struct hdr_cursor *nh,void * data_end,struct icmphdr **icmphdr)
+static __always_inline parse_icmphdr(struct hdr_cursor *nh,void * data_end,struct icmphdr **icmphdr)
 {
 	struct icmphdr *icmph = nh->pos;
 	if(icmph + 1 > data_end)
