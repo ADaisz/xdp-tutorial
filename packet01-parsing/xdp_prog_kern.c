@@ -4,7 +4,9 @@
 #include <linux/in.h>
 #include <linux/if_ether.h>
 #include <linux/if_packet.h>
+#include <linux/ip.h>
 #include <linux/ipv6.h>
+#include <linux/icmp.h>
 #include <linux/icmpv6.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
