@@ -114,7 +114,7 @@ static __always_inline int parse_icmp6hdr(struct hdr_cursor *nh,
 }
 
 /* Assignment 5: Implement ipv4 and use this */
-struct __always_inline int parse_iphdr(struct hdr_cursor *nh, void * data_end,struct iphdr ** iphdr)
+struct __always_inline int parse_iphdr(struct hdr_cursor *nh, void * data_end,struct iphdr **iphdr)
 {
 	struct iphdr * iph = nh->pos;
 	int hdrsize;
