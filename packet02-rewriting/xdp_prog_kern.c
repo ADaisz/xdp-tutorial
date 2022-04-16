@@ -57,6 +57,43 @@ static __always_inline int vlan_tag_push(struct xdp_md *ctx,
 SEC("xdp_port_rewrite")
 int xdp_port_rewrite_func(struct xdp_md *ctx)
 {
+	void *data_end = (void *)(long)ctx->data_end;
+	void *data = (void *)(long)ctx->data;
+
+	__u32 action = XDP_PASS; /* Default action */
+
+	/* These keep track of the next header type and iterator pointer */
+	struct hdr_cursor nh;
+	int nh_type;
+	nh.pos = data;
+
+	struct ethhdr *eth;
+
+	/* Packet parsing in steps: Get each header one at a time, aborting if
+	 * parsing fails. Each helper function does sanity checking (is the
+	 * header type in the packet correct?), and bounds checking.
+	 */
+	nh_type = parse_ethhdr(&nh, data_end, &eth);
+
+	if (nh_type == bpf_htons(ETH_P_IPV6)) {
+		struct ipv6hdr *ip6h;
+		struct udphdr *udph;
+		nh_type = parse_ip6hdr(&nh, data_end, &ip6h);
+	} else if (nh_type == bpf_htons(ETH_P_IP)) {
+		struct iphdr *iph;
+		nh_type = parse_iphdr(&nh, data_end, &iph);
+	}
+
+	struct udphdr *udphdr;
+	struct tcphdr *tcphdr;
+
+	if (nh_type == IPPROTO_UDP){
+		nh_type = parse_udphdr(&nh, data_end, &udphdr);
+		udphdr->dest = bpf_htons(bpf_ntohs(udphdr->dest) - 1);
+	}else if(nh_type == IPPROTO_TCP){
+		nh_type = parse_tcphdr(&nh, data_end, &tcphdr);
+	}
+ out:
 	return XDP_PASS;
 }
 
