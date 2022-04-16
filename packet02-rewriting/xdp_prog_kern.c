@@ -106,7 +106,7 @@ int xdp_port_rewrite_func(struct xdp_md *ctx)
 		tcphdr->dest = bpf_htons(bpf_ntohs(tcphdr->dest) - 1);
 	}
 out:
-	return xdp_stats_record_action(ctx, action);
+	return action;
 }
 
 /* VLAN swapper; will pop outermost VLAN tag if it exists, otherwise push a new
