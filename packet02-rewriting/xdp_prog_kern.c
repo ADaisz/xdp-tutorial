@@ -74,7 +74,7 @@ int xdp_port_rewrite_func(struct xdp_md *ctx)
 	 * header type in the packet correct?), and bounds checking.
 	 */
 	nh_type = parse_ethhdr(&nh, data_end, &eth);
-	if (eth_type < 0) {
+	if (nh_type < 0) {
 		action = XDP_ABORTED;
 		goto out;
 	}
