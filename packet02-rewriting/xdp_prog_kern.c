@@ -77,7 +77,6 @@ int xdp_port_rewrite_func(struct xdp_md *ctx)
 
 	if (nh_type == bpf_htons(ETH_P_IPV6)) {
 		struct ipv6hdr *ip6h;
-		struct udphdr *udph;
 		nh_type = parse_ip6hdr(&nh, data_end, &ip6h);
 	} else if (nh_type == bpf_htons(ETH_P_IP)) {
 		struct iphdr *iph;
@@ -93,8 +92,7 @@ int xdp_port_rewrite_func(struct xdp_md *ctx)
 	}else if(nh_type == IPPROTO_TCP){
 		nh_type = parse_tcphdr(&nh, data_end, &tcphdr);
 	}
- out:
-	return XDP_PASS;
+	return action;
 }
 
 /* VLAN swapper; will pop outermost VLAN tag if it exists, otherwise push a new
