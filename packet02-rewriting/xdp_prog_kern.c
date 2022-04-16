@@ -74,25 +74,39 @@ int xdp_port_rewrite_func(struct xdp_md *ctx)
 	 * header type in the packet correct?), and bounds checking.
 	 */
 	nh_type = parse_ethhdr(&nh, data_end, &eth);
-
+	if (eth_type < 0) {
+		action = XDP_ABORTED;
+		goto out;
+	}
 	if (nh_type == bpf_htons(ETH_P_IPV6)) {
 		struct ipv6hdr *ip6h;
 		nh_type = parse_ip6hdr(&nh, data_end, &ip6h);
 	} else if (nh_type == bpf_htons(ETH_P_IP)) {
 		struct iphdr *iph;
 		nh_type = parse_iphdr(&nh, data_end, &iph);
+	}else{
+		goto out;
 	}
 
 	struct udphdr *udphdr;
 	struct tcphdr *tcphdr;
 
 	if (nh_type == IPPROTO_UDP){
-		nh_type = parse_udphdr(&nh, data_end, &udphdr);
+		if(parse_udphdr(&nh, data_end, &udphdr) < 0){
+			action = XDP_ABORTED;
+			goto out;
+		}
+		
 		udphdr->dest = bpf_htons(bpf_ntohs(udphdr->dest) - 1);
 	}else if(nh_type == IPPROTO_TCP){
-		nh_type = parse_tcphdr(&nh, data_end, &tcphdr);
+		if(parse_tcphdr(&nh, data_end, &tcphdr) < 0){
+			action = XDP_ABORTED;
+			goto out;
+		}
+		tcphdr->dest = bpf_htons(bpf_ntohs(tcphdr->dest) - 1);
 	}
-	return action;
+out:
+	return xdp_stats_record_action(ctx, action);
 }
 
 /* VLAN swapper; will pop outermost VLAN tag if it exists, otherwise push a new
