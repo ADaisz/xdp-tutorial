@@ -71,6 +71,7 @@ static __always_inline int vlan_tag_push(struct xdp_md *ctx,
 	if(eth + 1 >data_end)
 		return -1;
 	__builtin_memcpy(eth,&eth_cpy,sizeof(*eth));
+	vlh = (void *)(eth + 1);
 	if(vlh + 1 > data_end)
 		return -1;
 	vlh->h_vlan_TCI = bpf_htons(vlid);
