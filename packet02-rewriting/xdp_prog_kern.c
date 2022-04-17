@@ -48,7 +48,7 @@ static __always_inline int vlan_tag_pop(struct xdp_md *ctx, struct ethhdr *eth)
 		return -1;
 	/* Copy back the old Ethernet header and update the proto type */
 	__builtin_memcpy(eth,&eth_cpy,sizeof(eth));
-	eth->proto = h_proto;
+	eth->h_proto = h_proto;
 	return vlid;
 }
 
@@ -74,8 +74,8 @@ static __always_inline int vlan_tag_push(struct xdp_md *ctx,
 	if(vlh + 1 > data_end)
 		return -1;
 	vlh->h_vlan_TCI = bpf_htons(vlid);
-	vlh->h_vlan_encapsulated_proto = eth->proto;
-	eth->proto = bpf_htons(ETH_P_8021Q);
+	vlh->h_vlan_encapsulated_proto = eth->h_proto;
+	eth->h_proto = bpf_htons(ETH_P_8021Q);
 	return 0;
 }
 
