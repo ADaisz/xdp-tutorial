@@ -144,7 +144,7 @@ int xdp_redirect_func(struct xdp_md *ctx)
 	struct ethhdr *eth;
 	int eth_type;
 	int action = XDP_PASS;
-	unsigned char dst[ETH_ALEN] = {fc00:dead:cafe:1::2};	/* Assignment 2: fill in with the MAC address of the left inner interface */
+	unsigned char dst[ETH_ALEN] = {"fc00:dead:cafe:1::2"};	/* Assignment 2: fill in with the MAC address of the left inner interface */
 	unsigned ifindex = 0;		/* Assignment 2: fill in with the ifindex of the left interface */
 
 	/* These keep track of the next header type and iterator pointer */
