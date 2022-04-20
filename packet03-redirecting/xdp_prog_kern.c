@@ -1,4 +1,18 @@
 /* SPDX-License-Identifier: GPL-2.0 */
+
+/* assignment3:
+	t setup -n left
+	t setup -n right
+	t load -n left -- -F --progsec xdp_redirect_map
+	t load -n left -- -F --progsec xdp_redirect_map
+	t exec -n left -- ./xdp_loader -d veth0 -F --progsec xdp_pass
+	t exec -n right -- ./xdp_loader -d veth0 -F --progsec xdp_pass
+	t redirect right left
+	# 查看right的ip地址,用left去ping
+	t -n left exec ping fc00:dead:cafe:2::2
+	# 另一个窗口
+	sudo ./xdp_stats -d right
+ */
 #include <linux/bpf.h>
 #include <linux/in.h>
 #include <bpf/bpf_helpers.h>
