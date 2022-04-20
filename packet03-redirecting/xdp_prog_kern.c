@@ -168,7 +168,7 @@ int xdp_redirect_func(struct xdp_md *ctx)
 	int action = XDP_PASS;
 	unsigned char dst[ETH_ALEN] = {};	/* Assignment 2: fill in with the MAC address of the left inner interface */
 	unsigned ifindex = 6;		/* Assignment 2: fill in with the ifindex of the left interface */
-	unsigned char *p = "fc00:dead:cafe:1::1";
+	unsigned char *p = "06:f7:32:af:41:10";
     mac_str_to_bin(p,dst);
 	/* These keep track of the next header type and iterator pointer */
 	nh.pos = data;
