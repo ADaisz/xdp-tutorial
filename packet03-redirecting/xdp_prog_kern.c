@@ -136,25 +136,25 @@ out:
 }
 
 
-static __always_inline int mac_str_to_bin( char *str, char *mac)
-{
-    int i;
-    char *s, *e;
+// static __always_inline int mac_str_to_bin( char *str, char *mac)
+// {
+//     int i;
+//     char *s, *e;
 
-    if ((mac == NULL) || (str == NULL))
-    {
-        return -1;
-    }
+//     if ((mac == NULL) || (str == NULL))
+//     {
+//         return -1;
+//     }
 
-    s = (char *) str;
-    for (i = 0; i < 6; ++i)
-    {
-        mac[i] = s ? strtoul (s, &e, 16) : 0;
-        if (s)
-           s = (*e) ? e + 1 : e;
-    }
-    return 0;
-}
+//     s = (char *) str;
+//     for (i = 0; i < 6; ++i)
+//     {
+//         mac[i] = s ? strtoul (s, &e, 16) : 0;
+//         if (s)
+//            s = (*e) ? e + 1 : e;
+//     }
+//     return 0;
+// }
 
 /* Assignment 2 */
 SEC("xdp_redirect")
@@ -166,10 +166,10 @@ int xdp_redirect_func(struct xdp_md *ctx)
 	struct ethhdr *eth;
 	int eth_type;
 	int action = XDP_PASS;
-	unsigned char dst[ETH_ALEN] = {};	/* Assignment 2: fill in with the MAC address of the left inner interface */
-	unsigned ifindex = 6;		/* Assignment 2: fill in with the ifindex of the left interface */
-	unsigned char *p = "06:f7:32:af:41:10";
-    mac_str_to_bin(p,dst);
+	// unsigned char dst[ETH_ALEN] = {};	/* Assignment 2: fill in with the MAC address of the left inner interface */
+	// unsigned ifindex = 6;		/* Assignment 2: fill in with the ifindex of the left interface */
+	// unsigned char *p = "06:f7:32:af:41:10";
+    // mac_str_to_bin(p,dst);
 	/* These keep track of the next header type and iterator pointer */
 	nh.pos = data;
 
@@ -181,8 +181,8 @@ int xdp_redirect_func(struct xdp_md *ctx)
 	/* Assignment 2: set a proper destination address and call the
 	 * bpf_redirect() with proper parameters, action = bpf_redirect(...) */
 	 /* Set a proper destination address */
-	memcpy(eth->h_dest, dst, ETH_ALEN);
-	action = bpf_redirect(ifindex, 0);
+	// memcpy(eth->h_dest, dst, ETH_ALEN);
+	// action = bpf_redirect(ifindex, 0);
 
 out:
 	return xdp_stats_record_action(ctx, action);
