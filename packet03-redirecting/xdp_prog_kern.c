@@ -3,6 +3,7 @@
 #include <linux/in.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
+#include <stdlib.h>
 
 // The parsing helper functions from the packet01 lesson have moved here
 #include "../common/parsing_helpers.h"
@@ -134,6 +135,27 @@ out:
 	return xdp_stats_record_action(ctx, action);
 }
 
+
+static __always_inline int mac_str_to_bin( char *str, char *mac)
+{
+    int i;
+    char *s, *e;
+
+    if ((mac == NULL) || (str == NULL))
+    {
+        return -1;
+    }
+
+    s = (char *) str;
+    for (i = 0; i < 6; ++i)
+    {
+        mac[i] = s ? strtoul (s, &e, 16) : 0;
+        if (s)
+           s = (*e) ? e + 1 : e;
+    }
+    return 0;
+}
+
 /* Assignment 2 */
 SEC("xdp_redirect")
 int xdp_redirect_func(struct xdp_md *ctx)
@@ -144,9 +166,10 @@ int xdp_redirect_func(struct xdp_md *ctx)
 	struct ethhdr *eth;
 	int eth_type;
 	int action = XDP_PASS;
-	unsigned char dst[ETH_ALEN] = "fc00:dead:cafe:1::1";	/* Assignment 2: fill in with the MAC address of the left inner interface */
+	unsigned char dst[ETH_ALEN] = {};	/* Assignment 2: fill in with the MAC address of the left inner interface */
 	unsigned ifindex = 0;		/* Assignment 2: fill in with the ifindex of the left interface */
-
+	unsigned char *p = "fc00:dead:cafe:1::1";
+    mac_str_to_bin(p,dst);
 	/* These keep track of the next header type and iterator pointer */
 	nh.pos = data;
 
