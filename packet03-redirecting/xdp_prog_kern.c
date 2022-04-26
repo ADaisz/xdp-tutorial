@@ -4,7 +4,7 @@
 	t setup -n left
 	t setup -n right
 	t load -n left -- -F --progsec xdp_redirect_map
-	t load -n left -- -F --progsec xdp_redirect_map
+	t load -n right -- -F --progsec xdp_redirect_map
 	t exec -n left -- ./xdp_loader -d veth0 -F --progsec xdp_pass
 	t exec -n right -- ./xdp_loader -d veth0 -F --progsec xdp_pass
 	t redirect right left
