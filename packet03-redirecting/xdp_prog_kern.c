@@ -149,27 +149,6 @@ out:
 	return xdp_stats_record_action(ctx, action);
 }
 
-
-// static __always_inline int mac_str_to_bin( char *str, char *mac)
-// {
-//     int i;
-//     char *s, *e;
-
-//     if ((mac == NULL) || (str == NULL))
-//     {
-//         return -1;
-//     }
-
-//     s = (char *) str;
-//     for (i = 0; i < 6; ++i)
-//     {
-//         mac[i] = s ? strtoul (s, &e, 16) : 0;
-//         if (s)
-//            s = (*e) ? e + 1 : e;
-//     }
-//     return 0;
-// }
-
 /* Assignment 2 */
 SEC("xdp_redirect")
 int xdp_redirect_func(struct xdp_md *ctx)
@@ -232,6 +211,12 @@ int xdp_redirect_map_func(struct xdp_md *ctx)
 out:
 	return xdp_stats_record_action(ctx, action);
 }
+
+#undef AF_INET
+#define AF_INET 2
+#undef AF_INET6
+#define AF_INET6 10
+#define IPV6_FLOWINFO_MASK bpf_htonl(0x0FFFFFFF)
 
 /* from include/net/ip.h */
 static __always_inline int ip_decrease_ttl(struct iphdr *iph)
