@@ -15,17 +15,11 @@
  */
 #include <linux/bpf.h>
 #include <linux/in.h>
-#include <linux/ip.h>
-#include <linux/ipv6.h>
-#include <linux/if_ether.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
-#include <stdlib.h>
 
 // The parsing helper functions from the packet01 lesson have moved here
 #include "../common/parsing_helpers.h"
-#include "../common/rewrite_helpers.h"
-
 
 
 /* Defines xdp_stats_map */
